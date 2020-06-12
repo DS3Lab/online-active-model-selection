@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Get script directory.
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )";
+WORKSPACE_DIR="$(dirname $(dirname $SCRIPT_DIR))";
+
+# Check if the target process is already running.
+PIDFILE=/tmp/dask-worker.pid
+LOGFILE=/tmp/dask-worker.log
+if [ -f $PIDFILE ]
+then
+    echo "Process already running. You would need to stop it before starting it again.";
+    exit 0;
+else
+    
+    # Activate the virtual environment.
+    source $WORKSPACE_DIR/.venv/bin/activate;
+    source $WORKSPACE_DIR/.env;
+
+    # Start the scheduler.
+    NPROCS=$(nproc --all)
+    nohup python -m distributed.cli.dask_worker --scheduler-file $WORKSPACE_DIR/var/scheduler-file.json --pid-file $PIDFILE --nthreads 1 --nprocs $NPROCS --memory-limit 6GB > $LOGFILE &2>&1 &
+
+fi
