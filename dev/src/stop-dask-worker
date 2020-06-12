@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Get script directory.
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )";
+
+# Check if the target process is already running.
+PIDFILE=/tmp/dask-worker.pid
+if [ -f $PIDFILE ]
+then
+    kill -9 $(cat $PIDFILE)
+    rm $PIDFILE
+    echo "Success.";
+else
+    echo "Process not running.";
+    exit 0;
+fi
