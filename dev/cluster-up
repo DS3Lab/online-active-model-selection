@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Get script directory.
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )";
+
+SSH_USERNAME=
+SCHEDULER_HOST=
+WORKER_HOSTS=""
+WORKSPACE_DIR=online-active-model-selection
+
+# Start the sceduler
+ssh "$SSH_USERNAME@$SCHEDULER_HOST" "cd $WORKSPACE_DIR; bash dev/src/start-dask-scheduler"
+
+IFS=,
+for WORKER_HOST in $WORKER_HOSTS
+do
+    echo $WORKER_HOST
+    ssh "$SSH_USERNAME@$WORKER_HOST" "cd $WORKSPACE_DIR; bash dev/src/start-dask-worker"
+done
