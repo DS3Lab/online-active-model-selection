@@ -1,0 +1,102 @@
+MobileNet V1 (depth multiplier 0.25, quantops),0.42648
+EfficientNet-B6 (tf),0.84060
+EfficientNet-B1 (google),0.77730
+MobileNet V1 (depth multiplier 0.50, width 128),0.53206
+MobileNet V2 (depth multiplier 0.35, width 224),0.58576
+MobileNet V1 (depth multiplier 0.75, width 192, quantops),0.63570
+MobileNet V1 (depth multiplier 0.75, width 192),0.65002
+AmoebaNet-A (N 18, F 448),0.83398
+MobileNet V2 (depth multiplier 0.35, width 160),0.53610
+EfficientNet-B2 (tf),0.78958
+ResNet V2 50,0.67468
+NASNet-A (large),0.81984
+MobileNet V2 (depth multiplier 1.00, width 192),0.69250
+ResNet V1 152,0.70604
+MobileNet V1 (depth multiplier 0.50, width 128, quantops),0.51662
+MobileNet V1 (depth multiplier 0.50, width 224, quantops),0.59554
+Inception V3,0.76890
+MobileNet V1 (depth multiplier 1.00, width 224),0.69156
+MobileNet V2 (depth multiplier 0.75, width 160),0.64704
+MobileNet V1 (depth multiplier 1.00, width 160, quantops),0.64824
+Inception ResNet V2,0.79612
+ResNet V2 101,0.69888
+EfficientNet-B6 (google),0.84060
+ResNet V1 50,0.67708
+MobileNet V1 (depth multiplier 0.25, width 192),0.44200
+BiT-M R101x1,0.79590
+NASNet-A (mobile),0.72110
+EfficientNet-Lite 1,0.75282
+MobileNet V2 (depth multiplier 0.75, width 224),0.68486
+MobileNet V1 (depth multiplier 1.00, width 160),0.65842
+MobileNet V1 (depth multiplier 1.00, width 192),0.67850
+MobileNet V1 (depth multiplier 0.25, width 224, quantops),0.45388
+MobileNet V2 (depth multiplier 1.40, width 224),0.73708
+MobileNet V1 (depth multiplier 0.75, width 160, quantops),0.60982
+MobileNet V1 (depth multiplier 0.25, width 160),0.42432
+MobileNet V1 (depth multiplier 0.25, width 224),0.46804
+BiT-M R50x1,0.77840
+EfficientNet-B0 (google),0.76202
+BiT-S model,0.64324
+Inception V3 (tf2-preview),0.76890
+MobileNet V2 (depth multiplier 0.75, width 192),0.67426
+MobileNet V2 (depth multiplier 0.50, width 128),0.55582
+BiT-S R101x1,0.75452
+MobileNet V1 (depth multiplier 1.00, width 192, quantops),0.67300
+MobileNet V2 (depth multiplier 1.30, width 224),0.72900
+EfficientNet-B7 (tf),0.84440
+MobileNet V2 (depth multiplier 1.00, width 160),0.67140
+MobileNet V1 (depth multiplier 0.75, width 224),0.66576
+MobileNet V2 (depth multiplier 0.35, width 192),0.56526
+EfficientNet-B3 (tf),0.81024
+MobileNet V1 (depth multiplier 0.75, width 160),0.62656
+MobileNet V2 (depth multiplier 1.00, width 224),0.70630
+BiT-S R50x3,0.77178
+MobileNet V1 (depth multiplier 0.25, width 128, quantops),0.36926
+EfficientNet-Lite 2,0.76432
+EfficientNet-B7 (google),0.84440
+BiT-S R50x1,0.74850
+BiT-M model,0.83414
+ResNet 50,0.01112
+MobileNet V2 (depth multiplier 1.00, width 128),0.63678
+MobileNet V2 (depth multiplier 0.35, width 96),0.43426
+EfficientNet-B4 (google),0.82718
+MobileNet V2 (depth multiplier 0.50, width 96),0.49162
+EfficientNet-Lite 0,0.72992
+MobileNet V1 (depth multiplier 0.25, width 160, quantops),0.39982
+Inception V2,0.72304
+BiT-S R101x3,0.76018
+MobileNet V1 (depth multiplier 0.75, width 224, quantops),0.65574
+MobileNet V1 (depth multiplier 0.50, width 192),0.59260
+MobileNet V1 (depth multiplier 0.75, width 128),0.59144
+PNASNet-5 (large),0.82252
+EfficientNet-B3 (google),0.81024
+MobileNet V1 (depth multiplier 1.00, quantops),0.67940
+MobileNet V1 (depth multiplier 0.25, width 128),0.38288
+BiT-M R50x3,0.82112
+EfficientNet-B5 (tf),0.83466
+MobileNet V2 (depth multiplier 0.50, width 224),0.63922
+MobileNet V1 (depth multiplier 0.75, width 128, quantops),0.56866
+EfficientNet-B1 (tf),0.77730
+MobileNet V2 (depth multiplier 0.50, width 160),0.59024
+MobileNet V1 (depth multiplier 0.50, width 192, quantops),0.57828
+MobileNet V2 (tf2-preview),0.70630
+MobileNet V1 (depth multiplier 1.00, width 128, quantops),0.61598
+EfficientNet-B4 (tf),0.82718
+EfficientNet-Lite 3,0.79188
+ResNet V1 101,0.70012
+MobileNet V2 (depth multiplier 0.75, width 128),0.61390
+BiT-M R101x3,0.83254
+MobileNet V2 (depth multiplier 0.50, width 192),0.62064
+EfficientNet-B0 (tf),0.76202
+MobileNet V1 (depth multiplier 1.00, width 128),0.62842
+Inception V1,0.67980
+EfficientNet-B5 (google),0.83466
+MobileNet V2 (depth multiplier 0.75, width 96),0.56512
+MobileNet V1 (depth multiplier 0.50, width 160),0.56398
+MobileNet V1 (depth multiplier 0.50, width 160, quantops),0.54814
+EfficientNet-B2 (google),0.78958
+EfficientNet-Lite 4,0.81554
+MobileNet V2 (depth multiplier 1.00, width 96),0.58418
+ResNet V2 152,0.70362
+MobileNet V2 (depth multiplier 0.35, width 128),0.48536
+MobileNet V1 (depth multiplier 0.50, width 224),0.60636
