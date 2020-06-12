@@ -25,7 +25,7 @@ def main(dataset_name, cluster=None):
         #
         grid_size = 10
         num_reals_tuning = 10
-        NumReals = 2#1000
+        NumReals = 1000
         load_hyperparameters = 'true'
         which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
