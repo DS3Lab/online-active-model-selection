@@ -1,10 +1,6 @@
 # Online Active Model Selection for Pre-trained ML Models
 
-This repository is the official implementation of Online Active Model Selection for Pre-trained ML Models that is submitted to NeurIPS 2020 (https://nips.cc/).
-
-Cite as 
-
-Nezihe Merve Gürel, Mohammad Reza Karimi, Bojan Karlas, Johannes Rausch, Ce Zhang and Andreas Krause, "Online Active Model Selection for Pre-trained ML Models", https://github.com/DS3Lab/online-active-model-selection, 2020.
+This repository is the official implementation of our work on online active model selection for pre-trained ML models.
 
 
 ## Requirements
