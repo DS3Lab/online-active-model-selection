@@ -1,6 +1,7 @@
 # Online Active Model Selection for Pre-trained ML Models
 
-This repository is the official implementation of Online Active Model Selection for Pre-trained ML Models that is submitted to NeurIPS 2020 (https://nips.cc/).
+This repository is the official implementation of our work on online active model selection for pre-trained ML models.
+
 
 ## Requirements
 
