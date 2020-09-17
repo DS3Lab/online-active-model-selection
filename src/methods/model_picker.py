@@ -60,9 +60,15 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
         else:
             u_t = 0
 
-        # Random query decision
-        z_t = np.random.binomial(size=1, n=1, p=u_t)
-        z_t_log[t-1] = z_t
+        # If u_t is in the region of disagreement, don't query anything
+        if u_t == 0:
+            z_t = 0
+            z_t_log[t-1] = z_t
+        else:
+            # Else, make a random query decision
+            z_t = np.random.binomial(size=1, n=1, p=u_t)
+            z_t_log[t-1] = z_t
+
         if z_t == 1:
 
         # Update loss_t
