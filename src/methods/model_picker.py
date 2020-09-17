@@ -10,6 +10,10 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
     :return:
     """
 
+    # setting = '0' # Setting 0 -- Paper's setting
+    # setting = '1' # Setting 1
+    setting = '2' # Setting 2
+
     # Set params
     eta_0 = 2 * np.sqrt(np.log(data._num_models))
     if idx_budget == 'tuning mode':
@@ -35,7 +39,6 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
     # For each streaming data instance
     for t in np.arange(1, data._num_instances+1, 1):
 
-
         # Edit eta
         eta = eta_0 / np.sqrt(t)
 
@@ -47,7 +50,6 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
 
         # Log posterior_t
         posterior_t_log[t-1, :] = posterior_t
-
 
         # Compute u_t
         u_t = _compute_u_t(data, posterior_t, eta, predictions[t-1, :], tuning_par, mode)
@@ -62,17 +64,36 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
 
         # If u_t is in the region of disagreement, don't query anything
         if u_t == 0:
+            u_prime_t = 0
             z_t = 0
             z_t_log[t-1] = z_t
         else:
             # Else, make a random query decision
-            z_t = np.random.binomial(size=1, n=1, p=u_t)
+            if setting == '1':
+                u_prime_t = np.max([u_t, np.sqrt(np.log(data._num_models)/data._num_instances)])
+            elif setting =='2':
+                u_prime_t = np.max([u_t, eta])
+                if u_prime_t > 1:
+                    u_prime_t = 1
+                elif u_prime_t < 0:
+                    u_prime_t=0
+                else:
+                    u_prime_t=u_prime_t
+            else:
+                u_prime_t = u_t
+
+            z_t = np.random.binomial(size=1, n=1, p=u_prime_t)
             z_t_log[t-1] = z_t
 
         if z_t == 1:
 
         # Update loss_t
-            loss_t += (np.array((predictions[t-1, :] != oracle[t-1]) * 1) / (u_t + eta/2))
+            if setting == '0':
+                denom_t = u_t + eta/2
+            else:
+                denom_t = u_prime_t
+
+            loss_t += (np.array((predictions[t-1, :] != oracle[t-1]) * 1) / denom_t)
             loss_t = loss_t.reshape(data._num_models, 1)
             loss_t = np.squeeze(np.asarray(loss_t))
 
