@@ -11,8 +11,8 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
     """
 
     # setting = '0' # Setting 0 -- Paper's setting
-    # setting = '1' # Setting 1
-    setting = '2' # Setting 2
+    setting = '1' # Setting 1
+    # setting = '2' # Setting 2
 
     # Set params
     eta_0 = 2 * np.sqrt(np.log(data._num_models))
