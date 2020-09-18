@@ -111,12 +111,17 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
     loss_winner = 0
     regret_real = 0
     regret_t = np.zeros(num_instances)
+    num_queries_t_real = np.zeros(num_instances)
     # losses_models = np.zeros(num_models)
 
     # Compute hidden regret at each instance (not only queried!)
     for t in np.arange(num_instances):
 
         # losses_winners += (predictions[t, :] != oracle[t]).astype(int)
+        if t == 0:
+            num_queries_t_real[t] = zt_real[t]
+        else:
+            num_queries_t_real[t] = num_queries_t_real[t-1]+zt_real[t]
 
 
         # Set posterior
@@ -159,14 +164,13 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
         regret_t[t] = regret_real
         #
 
-
     # Compute winner frequencies
     (freq_models_real, gap_star_freqs_real, gap_freqs_real) = _winner_frequencies(predictions, oracle, ct_real, labelled_ins, freq_window_size, true_precisions)
 
 
     # Return all
     return (true_acc, acc_real, prob_succ_real, regret_real, post_ratio_real,
-         freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t)
+         freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real)
 
 #
 
