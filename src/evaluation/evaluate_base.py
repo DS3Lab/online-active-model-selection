@@ -19,5 +19,6 @@ class Evals:
         self._num_queries = eval_results['num_queries']
         self._log_acc = eval_results['log_acc']
         self._true_acc = eval_results['true_acc']
+        self._num_queries_t = eval_results['num_queries_t']
 
 
