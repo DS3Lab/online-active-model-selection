@@ -25,9 +25,10 @@ def main(dataset_name, cluster=None):
         #
         grid_size = 10
         num_reals_tuning = 10
-        NumReals = 1000
-        load_hyperparameters = 'true'
-        which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        NumReals = 10
+        load_hyperparameters = 'false'
+        # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 1, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
     elif experiment == 'CIFAR10':
         # CIFAR10 55-92
@@ -49,9 +50,10 @@ def main(dataset_name, cluster=None):
         #
         grid_size = 40
         num_reals_tuning = 3
-        NumReals = 1000
-        load_hyperparameters = 'true' # don't tune but load the hyperparameters
-        which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        NumReals = 100
+        load_hyperparameters = 'false' # don't tune but load the hyperparameters
+        # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 1, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
     elif experiment == 'CIFAR10 (worse models)':
         # CIFAR10 40-70
@@ -70,8 +72,9 @@ def main(dataset_name, cluster=None):
         grid_size = 50
         num_reals_tuning = 5
         NumReals = 1000
-        load_hyperparameters = 'true'
-        which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        load_hyperparameters = 'false'
+        # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 1, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
 
     elif experiment == 'ImageNet':
