@@ -44,6 +44,7 @@ def evaluate_main(data, client=None):
     true_acc = np.zeros((len_budgets, num_reals))
     # Regret over time
     regret_time = np.zeros((len_budgets, num_instances, len(data._methods)))
+    num_queries_t = np.zeros((len_budgets, num_instances, len(data._methods)))
 
     if client is not None:
 
@@ -100,7 +101,7 @@ def evaluate_main(data, client=None):
                                                         predictions, oracle, freq_window_size, data._methods[i]))
 
                 (true_acc_method, log_acc_method, prob_succ_real, regret_real, post_ratio_real,
-                freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t,) = zip(*method_result)
+                freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real,) = zip(*method_result)
 
                 # Raw x-axis
                 prob_succ[idx_budget, i] = np.mean(prob_succ_real)
@@ -123,6 +124,7 @@ def evaluate_main(data, client=None):
                 # print(regret_t)
                 print(np.size(regret_t))
                 regret_time[idx_budget, :, i] = np.mean(regret_t, axis=0)
+                num_queries_t[idx_budget, :, i] = np.mean(num_queries_t_real, axis=0)
 
         else:
 
@@ -130,7 +132,7 @@ def evaluate_main(data, client=None):
 
                 true_acc_method, log_acc_method, mean_values = future.result()
 
-                log_acc_method_m, prob_succ_real_m, regret_real_m, post_ratio_real_m, freq_models_real_m, gap_star_freqs_real_m, gap_freqs_real_m, regret_t = mean_values
+                log_acc_method_m, prob_succ_real_m, regret_real_m, post_ratio_real_m, freq_models_real_m, gap_star_freqs_real_m, gap_freqs_real_m, regret_t, num_queries_t_real = mean_values
 
 
                 # Raw x-axis
@@ -148,6 +150,8 @@ def evaluate_main(data, client=None):
                 true_acc[idx_budget, :] = true_acc_method
                 #
                 regret_time[idx_budget, :, i] = regret_t
+                num_queries_t[idx_budget, :, i] = num_queries_t_real
+
 
                 # Calculate the plain budget usage
                 num_queries[i, idx_budget] = np.sum(idx_all[:, :, i]) / data._num_reals
@@ -168,7 +172,8 @@ def evaluate_main(data, client=None):
              log_acc=log_acc,
              true_acc=true_acc,
              idx_queries = idx_queries,
-             regret_time = regret_time
+             regret_time = regret_time,
+             num_queries_t = num_queries_t
              )
 
     """Form the dictionary"""
@@ -189,7 +194,8 @@ def evaluate_main(data, client=None):
         #
         'idx_queries':idx_queries,
         #
-        'regret_time':regret_time
+        'regret_time':regret_time,
+        'num_queries_t':num_queries_t
     }
 
     return eval_results
