@@ -31,6 +31,7 @@ def publish_evals(resultsdir):
     methods = methods_fullname
     budget = data['budgets']
 
+
     """Load evaluations"""
     eval_results = np.load(str(resultsdir) + '/eval_results.npz')
 
@@ -43,6 +44,9 @@ def publish_evals(resultsdir):
     num_queries = eval_results['num_queries']
     log_acc = eval_results['log_acc']
     true_acc = eval_results['true_acc']
+    #
+    num_queries_t = eval_results['num_queries_t']
+    print(num_queries_t.shape)
 
     # Determine for which budget point to monitor regret over the stream
     idx_regret = int(round(len(budget)/2))
