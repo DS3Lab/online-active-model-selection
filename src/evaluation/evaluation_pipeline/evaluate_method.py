@@ -76,7 +76,9 @@ def evaluate_method(data, streaming_instance_log, zt_method_allreals, ct_method_
             result.append(future.result())
 
     (true_acc_method, log_acc_method, prob_succ_real, regret_real, post_ratio_real,
-    freq_models_real, gap_star_freqs_real, gap_freqs_real,) = zip(*result)
+    freq_models_method, gap_star_freqs_method, gap_freqs_method, regret_t_method, num_queries_t_method,
+    frequent_winner_method, frequent_prob_succ_method, frequent_acc_method, ) = zip(*result)
+
 
     acc_method = np.mean(log_acc_method)
     prob_succ_method = np.mean(prob_succ_real)
@@ -85,6 +87,7 @@ def evaluate_method(data, streaming_instance_log, zt_method_allreals, ct_method_
     freq_models_method = np.mean(freq_models_real, axis=1)
     gap_star_freqs_method = np.mean(gap_star_freqs_real)
     gap_freqs_method = np.mean(gap_freqs_real)
+
 
     """Form the dictionary"""
     evals_method = {

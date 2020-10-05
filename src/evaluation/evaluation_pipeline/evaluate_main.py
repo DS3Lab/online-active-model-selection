@@ -1,4 +1,5 @@
-from src.evaluation.evaluation_pipeline.evaluate_method import *
+# from src.evaluation.evaluation_pipeline.evaluate_method import *
+from src.evaluation.evaluation_pipeline.evaluate_realizations import *
 from src.evaluation.aux.load_results import *
 
 from dask.distributed import Client, as_completed
@@ -32,6 +33,10 @@ def evaluate_main(data, client=None):
     # Initialize the evaluations
     prob_succ = np.zeros((len_budgets, len(data._methods)))
     acc = np.zeros((len_budgets, len(data._methods)))
+    #
+    prob_succ_frequent = np.zeros((len_budgets, len(data._methods)))
+    acc_frequent = np.zeros((len_budgets, len(data._methods)))
+    #
     regret = np.zeros((len_budgets, len(data._methods)))
     post_ratio = np.zeros((len_budgets, len(data._methods)))
     #
@@ -41,6 +46,7 @@ def evaluate_main(data, client=None):
     #
     # Initialize the log accuracies
     log_acc = np.zeros((len_budgets, num_reals, len(data._methods)))
+    log_acc_frequent = np.zeros((len_budgets, num_reals, len(data._methods)))
     true_acc = np.zeros((len_budgets, num_reals))
     # Regret over time
     regret_time = np.zeros((len_budgets, num_instances, len(data._methods)))
@@ -83,6 +89,7 @@ def evaluate_main(data, client=None):
                     lambda realizations: (
                         np.array(realizations)[:, 0],
                         np.array(realizations)[:, 1],
+                        np.array(realizations)[:, 12],
                         np.array(realizations)[:, 1:].mean(axis=0).tolist()
                     ),
                     realization_result_futures))
@@ -101,7 +108,12 @@ def evaluate_main(data, client=None):
                                                         predictions, oracle, freq_window_size, data._methods[i]))
 
                 (true_acc_method, log_acc_method, prob_succ_real, regret_real, post_ratio_real,
-                freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real,) = zip(*method_result)
+                freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real,
+                frequent_winner_real, frequent_prob_succ_real, frequent_acc_real, ) = zip(*method_result)
+
+                # return (true_acc, acc_real, prob_succ_real, regret_real, post_ratio_real,
+                #          freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real,
+                #          frequent_winner_real, frequent_prob_succ_real, frequent_acc_real)
 
                 # Raw x-axis
                 prob_succ[idx_budget, i] = np.mean(prob_succ_real)
@@ -113,9 +125,12 @@ def evaluate_main(data, client=None):
                 gap_freqs[idx_budget, i] = np.mean(gap_freqs_real)
                 freq_models[idx_budget, :, i] = np.mean(freq_models_real)
                 # print('freq_models_real:'+str(np.size(freq_models_real)))
+                prob_succ_frequent[idx_budget, i] = np.mean(frequent_prob_succ_real)
+                acc_frequent[idx_budget, i] = np.mean(frequent_acc_real)
 
                 #
                 log_acc[idx_budget, :, i] = log_acc_method
+                log_acc_frequent[idx_budget, :, i] = frequent_acc_real
                 #
                 true_acc[idx_budget, :] = true_acc_method
 
@@ -130,9 +145,9 @@ def evaluate_main(data, client=None):
 
             for i, future in enumerate(tqdm(method_result_futures, total=len(data._methods), desc=desc)):
 
-                true_acc_method, log_acc_method, mean_values = future.result()
+                true_acc_method, log_acc_method, log_acc_method_frequent, mean_values = future.result()
+                log_acc_method_m, prob_succ_real_m, regret_real_m, post_ratio_real_m, freq_models_real_m, gap_star_freqs_real_m, gap_freqs_real_m, regret_t, num_queries_t_real, frequent_winner_real, prob_succ_real_m_frequent, log_acc_method_m_frequent = mean_values
 
-                log_acc_method_m, prob_succ_real_m, regret_real_m, post_ratio_real_m, freq_models_real_m, gap_star_freqs_real_m, gap_freqs_real_m, regret_t, num_queries_t_real = mean_values
 
 
                 # Raw x-axis
@@ -147,10 +162,18 @@ def evaluate_main(data, client=None):
                 # print('freq_models_real_m:'+str(np.size(freq_models_real_m)))
                 #
                 log_acc[idx_budget, :, i] = log_acc_method
+
+
+
+                log_acc_frequent[idx_budget, :, i] = log_acc_method_frequent
                 true_acc[idx_budget, :] = true_acc_method
                 #
                 regret_time[idx_budget, :, i] = regret_t
                 num_queries_t[idx_budget, :, i] = num_queries_t_real
+                #
+                prob_succ_frequent[idx_budget, i] = prob_succ_real_m_frequent
+                acc_frequent[idx_budget, i] = log_acc_method_m_frequent
+
 
 
                 # Calculate the plain budget usage
@@ -163,6 +186,7 @@ def evaluate_main(data, client=None):
     """Save evaluations"""
     np.savez(str(data._resultsdir) + '/eval_results.npz',
              prob_succ=prob_succ, acc=acc, regret=regret, post_ratio=post_ratio,
+             prob_succ_frequent=prob_succ_frequent, acc_frequent=acc_frequent,
              gap_star_freqs=gap_star_freqs,
              gap_freqs=gap_freqs,
              freq_models=freq_models,
@@ -173,13 +197,16 @@ def evaluate_main(data, client=None):
              true_acc=true_acc,
              idx_queries = idx_queries,
              regret_time = regret_time,
-             num_queries_t = num_queries_t
+             num_queries_t = num_queries_t,
+             log_acc_frequent=log_acc_frequent
              )
 
     """Form the dictionary"""
     eval_results = {
         'prob_succ':prob_succ,
         'acc':acc,
+        'prob_succ_frequent':prob_succ_frequent,
+        'acc_frequent':acc_frequent,
         'regret':regret,
         'post_ratio':post_ratio,
         #
@@ -195,7 +222,9 @@ def evaluate_main(data, client=None):
         'idx_queries':idx_queries,
         #
         'regret_time':regret_time,
-        'num_queries_t':num_queries_t
+        'num_queries_t':num_queries_t,
+        #
+        'log_acc_frequent':log_acc_frequent
     }
 
     return eval_results

@@ -15,7 +15,6 @@ scipy = "*"
 mpmath = "*"
 sympy = "*"
 dask = {extras = ["complete"],version = "*"}
-dask-cloudprovider = {git = "git://github.com/dask/dask-cloudprovider.git",ref = "ce6e0039732f7c736e3e7559b1458dc077531ca4"}
 lz4 = "*"
 paramiko = "*"
 

@@ -114,6 +114,9 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
     num_queries_t_real = np.zeros(num_instances)
     # losses_models = np.zeros(num_models)
 
+    # Alternative winner for all
+    frequent_winner_all = np.zeros(num_instances)
+
     # Compute hidden regret at each instance (not only queried!)
     for t in np.arange(num_instances):
 
@@ -152,6 +155,10 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
         else:
             winner_t = arg_winners_t
 
+        # Log the winner at round t for model picker
+        if method == 'mp':
+            frequent_winner_all[t] = winner_t
+
 
         # Accumulate the error of returned model
         loss_winner = int((predictions[t, int(winner_t)] != oracle[t])*1)
@@ -163,6 +170,19 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
         # print(regret_real)
         regret_t[t] = regret_real
         #
+    # If model picker, output the most frequent winner
+    if method == 'mp':
+        t_random = np.random.randint(0, num_instances) # pick a round randomly
+        frequent_winner_real = frequent_winner_all[t_random]
+        # Probability of success of randomly returned model
+        frequent_prob_succ_real = (frequent_winner_real == true_winner).astype(int)
+        # Accuracy of the randomly returned model
+        frequent_acc_real = true_precisions[frequent_winner_real.astype(int)]
+    else:
+        frequent_winner_real = 0
+        frequent_prob_succ_real = 0
+        # Accuracy of the randomly returned model
+        frequent_acc_real = 0
 
     # Compute winner frequencies
     (freq_models_real, gap_star_freqs_real, gap_freqs_real) = _winner_frequencies(predictions, oracle, ct_real, labelled_ins, freq_window_size, true_precisions)
@@ -170,7 +190,7 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
 
     # Return all
     return (true_acc, acc_real, prob_succ_real, regret_real, post_ratio_real,
-         freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real)
+         freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real, frequent_winner_real, frequent_prob_succ_real, frequent_acc_real)
 
 #
 

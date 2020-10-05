@@ -20,15 +20,15 @@ def main(dataset_name, cluster=None):
         #
         constants = [150, 0.1, 6]
         #
-        budgets = list(np.arange(10, 171, 20))
+        budgets = list(np.arange(10, 171, 70))
 
         #
-        grid_size = 10
-        num_reals_tuning = 10
-        NumReals = 10
+        grid_size = 5
+        num_reals_tuning = 5
+        NumReals = 5
         load_hyperparameters = 'false'
         # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 1, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 0, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
     elif experiment == 'CIFAR10':
         # CIFAR10 55-92
@@ -48,12 +48,12 @@ def main(dataset_name, cluster=None):
         #
         budgets = [50,250,450,700,1100,1500,2000,2500,3000,3500,4000]
         #
-        grid_size = 40
-        num_reals_tuning = 3
-        NumReals = 100
+        grid_size = 400
+        num_reals_tuning = 20
+        NumReals = 1000
         load_hyperparameters = 'false' # don't tune but load the hyperparameters
         # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 1, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 0, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
     elif experiment == 'CIFAR10 (worse models)':
         # CIFAR10 40-70
@@ -69,12 +69,12 @@ def main(dataset_name, cluster=None):
         constants = [10, 0.1, 6]  # sqbc: increase
         #
         budgets = [50,350,700,1300,1900,2400,3000,3500,4000]
-        grid_size = 50
-        num_reals_tuning = 5
+        grid_size = 400
+        num_reals_tuning = 20
         NumReals = 1000
         load_hyperparameters = 'false'
         # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 1, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 0, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
 
     elif experiment == 'ImageNet':
@@ -121,7 +121,8 @@ def main(dataset_name, cluster=None):
                 hyperparameter_bounds_experiment.append(hyperparameter_bounds[i-1])
 
     """Run experiment."""
-    cluster = 'localhost'
+    # cluster = 'localhost'
+    cluster = "fdr4:8786"
     aws_workers = 32
     run_experiment(DatasetName, StreamSize, StreamSetting, budgets, NumReals, WinnerEvalWindow, num_reals_tuning, grid_size, load_hyperparameters, hyperparameter_bounds_experiment, which_methods, constants, cluster, aws_workers)
 

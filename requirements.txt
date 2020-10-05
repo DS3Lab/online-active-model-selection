@@ -9,7 +9,7 @@ cycler==0.10.0
 dask[complete]==2.17.0
 distributed==2.17.0
 fsspec==0.7.4
-git+git://github.com/dask/dask-cloudprovider.git@ce6e0039732f7c736e3e7559b1458dc077531ca4#egg=dask-cloudprovider
+dask-cloudprovider==0.4.1
 heapdict==1.0.1
 jinja2==2.11.2
 kiwisolver==1.2.0

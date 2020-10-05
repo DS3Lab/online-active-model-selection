@@ -9,13 +9,8 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
     :param mode: modes include {predictive}
     :return:
     """
-
-    # setting = '0' # Setting 0 -- Paper's setting
-    setting = '1' # Setting 1
-    # setting = '2' # Setting 2
-
     # Set params
-    eta_0 = 2 * np.sqrt(np.log(data._num_models))
+    eta_0 = np.sqrt(np.log(data._num_models)/2)
     if idx_budget == 'tuning mode':
         budget = data._num_instances
     else:
@@ -52,7 +47,7 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
         posterior_t_log[t-1, :] = posterior_t
 
         # Compute u_t
-        u_t = _compute_u_t(data, posterior_t, eta, predictions[t-1, :], tuning_par, mode)
+        u_t = _compute_u_t(data, posterior_t, predictions[t-1, :], tuning_par)
 
         # Sanity checks for sampling probability
         if u_t > 1:
@@ -62,38 +57,21 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
         else:
             u_t = 0
 
-        # If u_t is in the region of disagreement, don't query anything
-        if u_t == 0:
-            u_prime_t = 0
+        # Is x_t in the region of disagreement? yes if dis_t>1, no otherwise
+        dist_t = len(np.unique(predictions[t-1, :]))
+
+        # If u_t is in the region of agreement, don't query anything
+        if dist_t == 1:
+            u_t = 0
             z_t = 0
             z_t_log[t-1] = z_t
         else:
             # Else, make a random query decision
-            if setting == '1':
-                u_prime_t = np.max([u_t, np.sqrt(np.log(data._num_models)/data._num_instances)])
-            elif setting =='2':
-                u_prime_t = np.max([u_t, eta])
-                if u_prime_t > 1:
-                    u_prime_t = 1
-                elif u_prime_t < 0:
-                    u_prime_t=0
-                else:
-                    u_prime_t=u_prime_t
-            else:
-                u_prime_t = u_t
-
-            z_t = np.random.binomial(size=1, n=1, p=u_prime_t)
+            z_t = np.random.binomial(size=1, n=1, p=u_t)
             z_t_log[t-1] = z_t
 
         if z_t == 1:
-
-        # Update loss_t
-            if setting == '0':
-                denom_t = u_t + eta/2
-            else:
-                denom_t = u_prime_t
-
-            loss_t += (np.array((predictions[t-1, :] != oracle[t-1]) * 1) / denom_t)
+            loss_t += (np.array((predictions[t-1, :] != oracle[t-1]) * 1) / u_t)
             loss_t = loss_t.reshape(data._num_models, 1)
             loss_t = np.squeeze(np.asarray(loss_t))
 
@@ -118,11 +96,7 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
 
 ##
 
-def _compute_u_t(data, posterior_t, eta, predictions_c, tuning_par, mode):
-
-    # Compute the coefficients
-    coef1 = 8 / eta
-    coef2 = 8 / (eta ** 2)
+def _compute_u_t(data, posterior_t, predictions_c, tuning_par):
 
     # Initialize possible u_t's
     u_t_list = np.zeros(data._num_classes)
@@ -134,11 +108,7 @@ def _compute_u_t(data, posterior_t, eta, predictions_c, tuning_par, mode):
         #
         # Compute the respective u_t value (conditioned on class c)
         term1 = np.inner(posterior_t, loss_c)
-        if mode == 'KL divergence':
-            term2 = np.log(np.inner(posterior_t, np.exp(-eta * loss_c)))
-            u_t_list[c] = coef1 * term1 + coef2 * term2
-        else:
-            u_t_list[c] = term1*(1-term1)
+        u_t_list[c] = term1*(1-term1)
 
     # Return the final u_t
     u_t = tuning_par * np.max(u_t_list)

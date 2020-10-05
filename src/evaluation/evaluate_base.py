@@ -20,5 +20,11 @@ class Evals:
         self._log_acc = eval_results['log_acc']
         self._true_acc = eval_results['true_acc']
         self._num_queries_t = eval_results['num_queries_t']
+        #
+        self._prob_succ_frequent = eval_results['prob_succ_frequent']
+        self._acc_frequent = eval_results['acc_frequent']
+        #
+        self._log_acc_frequent = eval_results['log_acc_frequent']
+
 
 
