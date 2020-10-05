@@ -17,6 +17,7 @@ sympy = "*"
 dask = {extras = ["complete"],version = "*"}
 lz4 = "*"
 paramiko = "*"
+dask-cloudprovider = "*"
 
 [requires]
 python_version = "3.7"
