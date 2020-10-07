@@ -42,7 +42,6 @@ def tune_hyperpar_base(data, client=None, cache=None):
     hyperpars = np.zeros((len(budgets), num_models_exclude_random))
 
 
-
     if data._load_hyperparameters is 'true': # If 'true', load the hyperparameters.
 
         # Load data
@@ -145,10 +144,14 @@ def tune_hyperpar_base(data, client=None, cache=None):
 
         # :find hyperparameter for each budget and evaluate (every method except random sampling)
         for i in np.arange(np.size(budgets)):
-            idx_closest = np.argmin(abs(num_labels[:, method_id] - budgets[i]))
-
-            # Assign true closes to the hyperparameters
-            hyperpars[i, method_id] = grids[idx_closest, method_id]
+            if num_models_exclude_random != 1:
+                idx_closest = np.argmin(abs(num_labels[:, method_id] - budgets[i]))
+                # Assign true closes to the hyperparameters
+                hyperpars[i, method_id] = grids[idx_closest, method_id]
+            else:
+                idx_closest = np.argmin(abs(num_labels - budgets[i]))
+                # Assign true closes to the hyperparameters
+                hyperpars[i] = grids[idx_closest]
 
     # Hyperparameter for random sampling
     if which_methods[3] == 1:
