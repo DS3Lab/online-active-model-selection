@@ -39,8 +39,9 @@ def run_experiment(dataset, stream_size, stream_setting, budgets, num_reals, eva
 
     """Create a results directory."""
     now = datetime.now().strftime("_Date-%Y-%m-%d_Time-%H-%M-%S") # get datetime
-    os.mkdir('resources/results/'+dataset+'_streamsize'+str(stream_size)+'_numreals'+str(num_reals)+str(now)) # create the folder
-    results_dir = Path('resources/results/'+dataset+'_streamsize'+str(stream_size)+'_numreals'+str(num_reals)+str(now)) # assign it to the results directory var
+    which_methods_print = ''.join(map(str, which_methods))
+    os.mkdir('resources/results/'+dataset+'_streamsize'+str(stream_size)+'_numreals'+str(num_reals)+str(now)+'_which_methods'+str(which_methods_print)) # create the folder
+    results_dir = Path('resources/results/'+dataset+'_streamsize'+str(stream_size)+'_numreals'+str(num_reals)+str(now)+'_which_methods'+str(which_methods_print)) # assign it to the results directory var
 
     """Set data."""
     # Set the data
