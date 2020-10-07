@@ -1,7 +1,7 @@
 import numpy as np
 from pathlib import Path
 
-dataset = 'xxx'
+dataset = 'imagenet'
 
 if dataset == 'EmoContext':
     '''EmoContext'''
@@ -45,7 +45,7 @@ elif dataset == 'CIFAR10':
     num_labels[:500, 0] = np.squeeze(num_labels_new)
     # save the new object
     np.savez(str(hyper_dir) + '.npz', grids=grids, num_labels=num_labels)
-else:
+elif dataset == 'CIFAR10 (worse models)':
     '''CIFAR10 worse models'''
     # main repo
     hyper_dir = Path(r'/Users/nezihemervegurel/Desktop/all/GitHub/online-active-model-selection/resources/hyperparameters/cifar10_4070/hyperparameters')
@@ -66,10 +66,26 @@ else:
     num_labels[:500, 0] = np.squeeze(num_labels_new)
     # save the new object
     np.savez(str(hyper_dir) + '.npz', grids=grids, num_labels=num_labels)
+elif dataset == 'imagenet':
+    # main repo
+    hyper_dir = Path(r'/Users/nezihemervegurel/Desktop/all/GitHub/online-active-model-selection/resources/hyperparameters/imagenet/hyperparameters')
+    # load
+    hyperparameter_data = np.load(str(hyper_dir) + '.npz')
+    grids = hyperparameter_data['grids']
+    num_labels = hyperparameter_data['num_labels']
+    # remove prev mp hypers
+    grids[:, 0] = 0
+    num_labels[:, 0] = 0
+    # upload new hypers
+    hyper_new = Path(r'/Users/nezihemervegurel/Desktop/all/GitHub/online-active-model-selection/imagenet_hypers/hyperparameters')
+    hyperparameter_data_new = np.load(str(hyper_new) + '.npz')
+    grids_new = hyperparameter_data_new['grids']
+    num_labels_new = hyperparameter_data_new['num_labels']
+    # log the new values:
+    grids[:, 0] = np.squeeze(grids_new)
+    num_labels[:, 0] = np.squeeze(num_labels_new)
+    # save the new object
+    np.savez(str(hyper_dir) + '.npz', grids=grids, num_labels=num_labels)
 
-
-
-
-
-
-hyper_dir = Path(r'/Users/nezihemervegurel/Desktop/all/GitHub/online-active-model-selection/resources/hyperparameters/cifar10_5592/hyperparameters')
+else:
+    print('Error')
