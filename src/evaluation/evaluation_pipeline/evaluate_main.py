@@ -115,6 +115,10 @@ def evaluate_main(data, client=None):
                 #          freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real,
                 #          frequent_winner_real, frequent_prob_succ_real, frequent_acc_real)
 
+                # print('round: '+str(i))
+                # print('true_acc_method:'+str(true_acc_method))
+                # print('log_acc_method:'+str(log_acc_method))
+                # print('prob_succ_real:'+str(prob_succ_real))
                 # Raw x-axis
                 prob_succ[idx_budget, i] = np.mean(prob_succ_real)
                 acc[idx_budget, i] = np.mean(log_acc_method)
@@ -148,6 +152,12 @@ def evaluate_main(data, client=None):
                 true_acc_method, log_acc_method, log_acc_method_frequent, mean_values = future.result()
                 log_acc_method_m, prob_succ_real_m, regret_real_m, post_ratio_real_m, freq_models_real_m, gap_star_freqs_real_m, gap_freqs_real_m, regret_t, num_queries_t_real, frequent_winner_real, prob_succ_real_m_frequent, log_acc_method_m_frequent = mean_values
 
+                # print('round: '+str(i))
+                # print('true_acc_method:'+str(true_acc_method))
+                # print('log_acc_method:'+str(log_acc_method))
+                # print('log_acc_method_frequent:'+str(log_acc_method_frequent))
+                # print('log_acc_method_m:'+str(log_acc_method_m))
+                # print('prob_succ_real_m:'+str(prob_succ_real_m))
 
 
                 # Raw x-axis
@@ -162,9 +172,6 @@ def evaluate_main(data, client=None):
                 # print('freq_models_real_m:'+str(np.size(freq_models_real_m)))
                 #
                 log_acc[idx_budget, :, i] = log_acc_method
-
-
-
                 log_acc_frequent[idx_budget, :, i] = log_acc_method_frequent
                 true_acc[idx_budget, :] = true_acc_method
                 #
