@@ -36,8 +36,10 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
 
     # Extract true predictions.
     true_precisions = compute_precisions(predictions, oracle, num_models)
-    true_winner = np.argmax(true_precisions)
-    true_acc = true_precisions[true_winner]
+    true_winner = np.where(np.equal(true_precisions, np.max(true_precisions)))[0]
+    winner_randint = np.random.randint(len(true_winner))
+    true_winner_random = true_winner[winner_randint]
+    true_acc = true_precisions[true_winner_random]
 
     # Squeeze the unit dimensions of posterior real and streaming instance indices.
     streaming_instances_i = np.squeeze(streaming_instances_i).astype(int)
@@ -79,7 +81,11 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
         winner_t = arg_winners_t.astype(int)
 
     # Probability of success
-    prob_succ_real = (winner_t == true_winner).astype(int)
+    if winner_t in true_winner:
+        prob_succ_real = 1
+    else:
+        prob_succ_real = 0
+    # prob_succ_real = (winner_t == true_winner).astype(int)
 
     # Accuracy of the returned model
     acc_real = true_precisions[winner_t]
@@ -163,7 +169,7 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
         # Accumulate the error of returned model
         loss_winner = int((predictions[t, int(winner_t)] != oracle[t])*1)
         # Accumulate the error of true winner
-        loss_true =  int((predictions[t, int(true_winner)] != oracle[t])*1)
+        loss_true =  int((predictions[t, int(true_winner_random)] != oracle[t])*1)
 
 
         regret_real += (loss_winner - loss_true)
@@ -175,7 +181,13 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
         t_random = np.random.randint(0, num_instances) # pick a round randomly
         frequent_winner_real = frequent_winner_all[t_random]
         # Probability of success of randomly returned model
-        frequent_prob_succ_real = (frequent_winner_real == true_winner).astype(int)
+        # frequent_prob_succ_real = (frequent_winner_real == true_winner).astype(int)
+        # Probability of success
+        if frequent_winner_real in true_winner:
+            frequent_prob_succ_real = 1
+        else:
+            frequent_prob_succ_real = 0
+        # prob_succ_real = (winner_t == true_winner).astype(int)
         # Accuracy of the randomly returned model
         frequent_acc_real = true_precisions[frequent_winner_real.astype(int)]
     else:
@@ -187,6 +199,11 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
     # Compute winner frequencies
     (freq_models_real, gap_star_freqs_real, gap_freqs_real) = _winner_frequencies(predictions, oracle, ct_real, labelled_ins, freq_window_size, true_precisions)
 
+    # ## Prints
+    # print('true_acc:'+str(true_acc))
+    # print('acc_real:' + str(acc_real))
+    # print('prob_succ_real in reals: ' + str(prob_succ_real))
+    # print('regret_real:' + str(regret_real))
 
     # Return all
     return (true_acc, acc_real, prob_succ_real, regret_real, post_ratio_real,
