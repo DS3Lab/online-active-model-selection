@@ -8,7 +8,7 @@ if __name__ == '__main__':
     DatasetName = 'imagenet'
     #
     #
-    StreamSize = 10#000
+    StreamSize = 10000
     #
     hyper_mp = 135
     hyper_qbc = 22
