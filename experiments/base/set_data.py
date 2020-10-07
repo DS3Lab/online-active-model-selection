@@ -107,6 +107,23 @@ class SetData():
             self._num_models = np.size(predictions, 1)
             self._size_entire_pool = np.size(predictions, 0)
 
+        elif data_set_name == 'domain_drift':
+            # Load and preprocess data
+            path_domain = Path(r'resources/datasets/domain_drift/')
+
+            # Preprocess data
+            predictions = np.load(str(path_domain) + "/predictions.npy")
+            predictions -= 1
+            oracle = np.load(str(path_domain) + "/oracle.npy")
+            oracle -= 1
+
+            # Dataset specific attributes
+            self._predictions = predictions
+            self._oracle = oracle
+            self._num_classes = 6
+            self._num_models = np.size(predictions, 1)
+            self._size_entire_pool = np.size(predictions, 0)
+
         else:
             assert 'Dataset name has not been specified!'
 
