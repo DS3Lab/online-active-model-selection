@@ -196,4 +196,11 @@ def run_realization(data, budget_idx):
         ct_log_i[:, num_runing_models] = ct_efal
         idx_budget_log_i[:, num_runing_models] = idx_budget_efal
 
+    if 'mp' in data._methods:
+        hidden_loss_log_i = hidden_loss_log_i
+        posterior_t_log_i = posterior_t_log_i
+    else:
+        hidden_loss_log_i = np.zeros(data._num_instances)
+        posterior_t_log_i = np.zeros((data._num_instances, data._num_models))
+
     return idx_log_i, idx_budget_log_i, ct_log_i, streaming_data_instances_real, hidden_loss_log_i, posterior_t_log_i
