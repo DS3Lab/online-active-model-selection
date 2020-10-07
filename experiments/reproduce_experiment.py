@@ -29,6 +29,31 @@ def main(dataset_name, cluster=None):
         # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
         # which_methods = list([1, 1, 1, 1, 1, 0])   # In order, mp, qbc, sqbc, rs, iwal, efal
         which_methods = list([0, 0, 0, 0, 0, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+
+    elif experiment == 'DomainDrift':
+        # Emotion Detection
+        DatasetName = 'domain_drift'
+        #
+        StreamSize = 2500
+        #
+        hyper_mp = 60
+        hyper_qbc = 4
+        hyper_sqbc = 4
+        hyper_iwal = 5
+        hyper_efal = 0.00005
+        #
+        constants = [150, 0.1, 6]
+        #
+        budgets = [50,250,500,750,1000,1250,1500,1750,2000,2250,2500]
+
+        #
+        grid_size = 120
+        num_reals_tuning = 50
+        NumReals = 500  # 00#0
+        load_hyperparameters = 'true'
+        # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 1, 1, 1, 1, 0])   # In order, mp, qbc, sqbc, rs, iwal, efal
+        # which_methods = list([0, 0, 0, 0, 0, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
     elif experiment == 'CIFAR10':
         # CIFAR10 55-92
@@ -51,7 +76,7 @@ def main(dataset_name, cluster=None):
         #
         grid_size = 500
         num_reals_tuning = 30
-        NumReals = 100#00
+        NumReals = 250#00
         load_hyperparameters = 'true' # don't tune but load the hyperparameters
         # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
         which_methods = list([1, 1, 1, 1, 1, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
@@ -74,7 +99,7 @@ def main(dataset_name, cluster=None):
         budgets = [50, 250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 3500, 4000]
         grid_size = 500
         num_reals_tuning = 50
-        NumReals = 250#00
+        NumReals = 100#00
         load_hyperparameters = 'true'
         # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
         which_methods = list([1, 1, 1, 1, 1, 0])   # In order, mp, qbc, sqbc, rs, iwal, efal
@@ -98,9 +123,9 @@ def main(dataset_name, cluster=None):
         #
         grid_size = 250
         num_reals_tuning = 40
-        NumReals = 100
+        NumReals = 250
         load_hyperparameters = 'true'
-        which_methods = list([1, 0, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 1, 1, 1, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
 
     else:
