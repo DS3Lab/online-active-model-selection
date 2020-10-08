@@ -19,16 +19,16 @@ def main(dataset_name, cluster=None):
         #
         constants = [150, 0.1, 6]
         #
-        budgets = list(np.arange(10, 211, 20)) #list(np.arange(10, 211, 20))
+        budgets = list(np.arange(10, 180, 20)) #list(np.arange(10, 211, 20))
 
         #
         grid_size = 500
         num_reals_tuning = 30
-        NumReals = 2000#00#0
+        NumReals = 100#0#00#0
         load_hyperparameters = 'true'
         # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        # which_methods = list([1, 1, 1, 1, 1, 0])   # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([0, 0, 0, 0, 0, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 1, 1, 1, 1, 0])   # In order, mp, qbc, sqbc, rs, iwal, efal
+        # which_methods = list([0, 0, 0, 0, 0, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
 
     elif experiment == 'DomainDrift':
         # Emotion Detection
@@ -71,15 +71,17 @@ def main(dataset_name, cluster=None):
         constant_sqbc = 1.4
         constants = [150, 0.1, 5]
         #
-        # budgets = [50,250,450,700,1100,1500,2000,2500,3000,3500,4000]
-        budgets = [50,250,500,750,1000,1250,1500,2000,2500,3000,3500,4000]
+        budgets = [50,450,1000, 2000,4000]
+        # budgets = [50,250,500,750,1000,1250,1500,2000,2500,3000,3500,4000]
         #
         grid_size = 500
         num_reals_tuning = 30
-        NumReals = 250#00
+        NumReals = 10#0#0#00
         load_hyperparameters = 'true' # don't tune but load the hyperparameters
         # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 1, 1, 1, 1, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        # which_methods = list([1, 1, 1, 1, 1, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 1, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+
 
         #
     elif experiment == 'CIFAR10 (worse models)':
@@ -121,12 +123,12 @@ def main(dataset_name, cluster=None):
         #
         budgets = [50, 300, 600, 900, 1200, 1500, 1750, 2000, 2250, 2500, 3000, 4000, 5000, 7000, 10000]
         #
-        grid_size = 250
-        num_reals_tuning = 40
-        NumReals = 250
-        load_hyperparameters = 'true'
-        which_methods = list([1, 1, 1, 1, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        #
+        grid_size = 200
+        num_reals_tuning = 30
+        NumReals = 500#50
+        load_hyperparameters = 'false'
+        # which_methods = list([1, 1, 1, 1, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        which_methods = list([1, 0, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
 
     else:
         raise ValueError('The model collection does not exist')
