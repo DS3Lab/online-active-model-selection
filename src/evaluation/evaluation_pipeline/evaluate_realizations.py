@@ -110,18 +110,18 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
             post_ratio_real = np.log(best_posterior/second_best_posterior)
 
 
-    # Hidden Regret
+    # Regret
 
     # Initialize
     loss_true = 0
     loss_winner = 0
     regret_real = 0
+    sampled_regret_real = 0
     regret_t = np.zeros(num_instances)
+    sampled_regret_t = np.zeros(num_instances)
     num_queries_t_real = np.zeros(num_instances)
     # losses_models = np.zeros(num_models)
 
-    # Alternative winner for all
-    frequent_winner_all = np.zeros(num_instances)
 
     # Compute hidden regret at each instance (not only queried!)
     for t in np.arange(num_instances):
@@ -138,6 +138,7 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
             posterior_t = posterior_real[t, :]
             arg_winners_t = np.where(np.equal(posterior_t, np.max(posterior_t)))[0]
         else: # else, check the weighted losses
+            posterior_t = np.ones(num_models)/num_models
             if num_labelled == 1:
                 labelled_instances_t = 0
             else:
@@ -161,9 +162,6 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
         else:
             winner_t = arg_winners_t
 
-        # Log the winner at round t for model picker
-        if method == 'mp':
-            frequent_winner_all[t] = winner_t
 
 
         # Accumulate the error of returned model
@@ -171,88 +169,21 @@ def evaluate_realizations(log_slice, predictions, oracle, freq_window_size, meth
         # Accumulate the error of true winner
         loss_true =  int((predictions[t, int(true_winner_random)] != oracle[t])*1)
 
+        # Sampled regret time
+        m_star = np.random.choice(list(range(num_models)), p=posterior_t)
+        # Incur hidden loss
+        loss_sampled = (predictions[t, m_star] != oracle[t]) * 1
+
 
         regret_real += (loss_winner - loss_true)
+        sampled_regret_real += (loss_sampled - loss_true)
         # print(regret_real)
         regret_t[t] = regret_real
+        sampled_regret_t[t] = sampled_regret_real
         #
-    # If model picker, output the most frequent winner
-    if method == 'mp':
-        t_random = np.random.randint(0, num_instances) # pick a round randomly
-        frequent_winner_real = frequent_winner_all[t_random]
-        # Probability of success of randomly returned model
-        # frequent_prob_succ_real = (frequent_winner_real == true_winner).astype(int)
-        # Probability of success
-        if frequent_winner_real in true_winner:
-            frequent_prob_succ_real = 1
-        else:
-            frequent_prob_succ_real = 0
-        # prob_succ_real = (winner_t == true_winner).astype(int)
-        # Accuracy of the randomly returned model
-        frequent_acc_real = true_precisions[frequent_winner_real.astype(int)]
-    else:
-        frequent_winner_real = 0
-        frequent_prob_succ_real = 0
-        # Accuracy of the randomly returned model
-        frequent_acc_real = 0
-
-    # Compute winner frequencies
-    (freq_models_real, gap_star_freqs_real, gap_freqs_real) = _winner_frequencies(predictions, oracle, ct_real, labelled_ins, freq_window_size, true_precisions)
-
-    # ## Prints
-    # print('true_acc:'+str(true_acc))
-    # print('acc_real:' + str(acc_real))
-    # print('prob_succ_real in reals: ' + str(prob_succ_real))
-    # print('regret_real:' + str(regret_real))
 
     # Return all
-    return (true_acc, acc_real, prob_succ_real, regret_real, post_ratio_real,
-         freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real, frequent_winner_real, frequent_prob_succ_real, frequent_acc_real)
+    return (true_acc, acc_real, prob_succ_real, regret_real, regret_t, sampled_regret_real, sampled_regret_t, num_queries_t_real)
 
 #
 
-def _winner_frequencies(predictions, oracle, ct, labelled_instances, window_size, true_precisions):
-    """
-    :param all_winners_method: num_instances x models
-    :param labelled_ins: size of <= budget
-    :param window_size:
-    :param true_precisions:
-    :return:
-    """
-
-    # Set params
-    num_instances, num_models = predictions.shape
-    num_labelled = np.size(labelled_instances)
-
-    # Sliding window properties
-    if num_labelled > window_size: # if there is enough queries to slide the window
-        window = labelled_instances[num_labelled-window_size:num_labelled] # then set accordingly
-    else: # else
-        window = labelled_instances # set it to the entire queries
-
-    # Preprocess
-
-    # Order the models
-    ordered_models = np.flip(np.argsort(true_precisions))
-
-    # For each point in the window, check the wining counts
-    winner_freqs = np.zeros(num_models) # initialize the winner frequencies
-
-    if num_labelled > 1:
-        for i in np.arange(np.size(window)):
-            idx_instances =  np.where(labelled_instances.reshape(num_labelled, 1) <= window[i])[0]
-            labelled_instances_t = labelled_instances[idx_instances]
-            weighted_precisions_i = compute_weighted_accuracy(predictions[labelled_instances_t, :], oracle[labelled_instances_t], ct[labelled_instances_t], num_models)
-            idx_winners = np.where(weighted_precisions_i.reshape(num_models, 1)==np.max(weighted_precisions_i))[0]
-            winner_freqs[idx_winners] += 1
-        # normalize
-        winner_freqs = winner_freqs / int(np.size(window))
-        # Find the gap between the true winners and experimental winners
-        best_gap = winner_freqs[ordered_models[0]] - winner_freqs[ordered_models[1]]  # gap between the true best and second true best model for this realization
-        method_winner_sort = np.flip(np.argsort(winner_freqs))
-        method_gap = winner_freqs[method_winner_sort[0]] - winner_freqs[method_winner_sort[1]]
-    else:
-        best_gap = 1/num_models
-        method_gap = 1/num_models
-
-    return (winner_freqs, best_gap, method_gap)
