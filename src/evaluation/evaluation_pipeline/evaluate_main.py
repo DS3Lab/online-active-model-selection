@@ -34,22 +34,15 @@ def evaluate_main(data, client=None):
     prob_succ = np.zeros((len_budgets, len(data._methods)))
     acc = np.zeros((len_budgets, len(data._methods)))
     #
-    prob_succ_frequent = np.zeros((len_budgets, len(data._methods)))
-    acc_frequent = np.zeros((len_budgets, len(data._methods)))
-    #
     regret = np.zeros((len_budgets, len(data._methods)))
-    post_ratio = np.zeros((len_budgets, len(data._methods)))
-    #
-    freq_models = np.zeros((len_budgets, data._num_models, len(data._methods)))
-    gap_star_freqs = np.zeros((len_budgets, len(data._methods)))
-    gap_freqs = np.zeros((len_budgets, len(data._methods)))
+    sampled_regret = np.zeros((len_budgets, len(data._methods)))
     #
     # Initialize the log accuracies
     log_acc = np.zeros((len_budgets, num_reals, len(data._methods)))
-    log_acc_frequent = np.zeros((len_budgets, num_reals, len(data._methods)))
     true_acc = np.zeros((len_budgets, num_reals))
     # Regret over time
     regret_time = np.zeros((len_budgets, num_instances, len(data._methods)))
+    sampled_regret_time = np.zeros((len_budgets, num_instances, len(data._methods)))
     num_queries_t = np.zeros((len_budgets, num_instances, len(data._methods)))
 
     if client is not None:
@@ -89,7 +82,6 @@ def evaluate_main(data, client=None):
                     lambda realizations: (
                         np.array(realizations)[:, 0],
                         np.array(realizations)[:, 1],
-                        np.array(realizations)[:, 12],
                         np.array(realizations)[:, 1:].mean(axis=0).tolist()
                     ),
                     realization_result_futures))
@@ -107,13 +99,8 @@ def evaluate_main(data, client=None):
                                                         ct_all[:, j, i], posterior_t_log[:, :, j]),
                                                         predictions, oracle, freq_window_size, data._methods[i]))
 
-                (true_acc_method, log_acc_method, prob_succ_real, regret_real, post_ratio_real,
-                freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real,
-                frequent_winner_real, frequent_prob_succ_real, frequent_acc_real, ) = zip(*method_result)
+                (true_acc_method, log_acc_method, prob_succ_real, regret_real, regret_t, sampled_regret_real, sampled_regret_t, num_queries_t_real, ) = zip(*method_result)
 
-                # return (true_acc, acc_real, prob_succ_real, regret_real, post_ratio_real,
-                #          freq_models_real, gap_star_freqs_real, gap_freqs_real, regret_t, num_queries_t_real,
-                #          frequent_winner_real, frequent_prob_succ_real, frequent_acc_real)
 
                 # print('round: '+str(i))
                 # print('true_acc_method:'+str(true_acc_method))
@@ -123,34 +110,27 @@ def evaluate_main(data, client=None):
                 prob_succ[idx_budget, i] = np.mean(prob_succ_real)
                 acc[idx_budget, i] = np.mean(log_acc_method)
                 regret[idx_budget, i] = np.mean(regret_real)
-                post_ratio[idx_budget, i] = np.mean(post_ratio_real)
-                #
-                gap_star_freqs[idx_budget, i] = np.mean(gap_star_freqs_real)
-                gap_freqs[idx_budget, i] = np.mean(gap_freqs_real)
-                freq_models[idx_budget, :, i] = np.mean(freq_models_real)
+                sampled_regret[idx_budget, i] = np.mean(sampled_regret_real)
                 # print('freq_models_real:'+str(np.size(freq_models_real)))
-                prob_succ_frequent[idx_budget, i] = np.mean(frequent_prob_succ_real)
-                acc_frequent[idx_budget, i] = np.mean(frequent_acc_real)
 
                 #
                 log_acc[idx_budget, :, i] = log_acc_method
-                log_acc_frequent[idx_budget, :, i] = frequent_acc_real
                 #
                 true_acc[idx_budget, :] = true_acc_method
 
                 # Calculate the plain budget usage
                 num_queries[i, idx_budget] = np.sum(idx_all[:, :, i]) / data._num_reals
                 # print(regret_t)
-                print(np.size(regret_t))
                 regret_time[idx_budget, :, i] = np.mean(regret_t, axis=0)
+                sampled_regret_time[idx_budget, :, i] = np.mean(sampled_regret_t, axis=0)
                 num_queries_t[idx_budget, :, i] = np.mean(num_queries_t_real, axis=0)
 
         else:
 
             for i, future in enumerate(tqdm(method_result_futures, total=len(data._methods), desc=desc)):
 
-                true_acc_method, log_acc_method, log_acc_method_frequent, mean_values = future.result()
-                log_acc_method_m, prob_succ_real_m, regret_real_m, post_ratio_real_m, freq_models_real_m, gap_star_freqs_real_m, gap_freqs_real_m, regret_t, num_queries_t_real, frequent_winner_real, prob_succ_real_m_frequent, log_acc_method_m_frequent = mean_values
+                true_acc_method, log_acc_method, mean_values = future.result()
+                log_acc_method_m, prob_succ_real_m, regret_real_m, regret_t, sampled_regret_real_m, sampled_regret_t, num_queries_t_real = mean_values
 
                 # print('round: '+str(i))
                 # print('true_acc_method:'+str(true_acc_method))
@@ -164,24 +144,15 @@ def evaluate_main(data, client=None):
                 prob_succ[idx_budget, i] = prob_succ_real_m
                 acc[idx_budget, i] = log_acc_method_m
                 regret[idx_budget, i] = regret_real_m
-                post_ratio[idx_budget, i] = post_ratio_real_m
-                #
-                gap_star_freqs[idx_budget, i] = gap_star_freqs_real_m
-                gap_freqs[idx_budget, i] = gap_freqs_real_m
-                freq_models[idx_budget, :, i] = freq_models_real_m
+                sampled_regret[idx_budget, i] = sampled_regret_real_m
                 # print('freq_models_real_m:'+str(np.size(freq_models_real_m)))
                 #
                 log_acc[idx_budget, :, i] = log_acc_method
-                log_acc_frequent[idx_budget, :, i] = log_acc_method_frequent
                 true_acc[idx_budget, :] = true_acc_method
                 #
                 regret_time[idx_budget, :, i] = regret_t
+                sampled_regret_time[idx_budget, :, i] = sampled_regret_t
                 num_queries_t[idx_budget, :, i] = num_queries_t_real
-                #
-                prob_succ_frequent[idx_budget, i] = prob_succ_real_m_frequent
-                acc_frequent[idx_budget, i] = log_acc_method_m_frequent
-
-
 
                 # Calculate the plain budget usage
                 num_queries[i, idx_budget] = np.sum(idx_all[:, :, i]) / data._num_reals
@@ -192,11 +163,8 @@ def evaluate_main(data, client=None):
 
     """Save evaluations"""
     np.savez(str(data._resultsdir) + '/eval_results.npz',
-             prob_succ=prob_succ, acc=acc, regret=regret, post_ratio=post_ratio,
-             prob_succ_frequent=prob_succ_frequent, acc_frequent=acc_frequent,
-             gap_star_freqs=gap_star_freqs,
-             gap_freqs=gap_freqs,
-             freq_models=freq_models,
+             prob_succ=prob_succ, acc=acc, regret=regret,
+             sampled_regret=sampled_regret,
              #
              num_queries=num_queries,
              #
@@ -204,22 +172,16 @@ def evaluate_main(data, client=None):
              true_acc=true_acc,
              idx_queries = idx_queries,
              regret_time = regret_time,
+             sampled_regret_time=sampled_regret_time,
              num_queries_t = num_queries_t,
-             log_acc_frequent=log_acc_frequent
              )
 
     """Form the dictionary"""
     eval_results = {
         'prob_succ':prob_succ,
         'acc':acc,
-        'prob_succ_frequent':prob_succ_frequent,
-        'acc_frequent':acc_frequent,
         'regret':regret,
-        'post_ratio':post_ratio,
-        #
-        'gap_star_freqs':gap_star_freqs,
-        'gap_freqs':gap_freqs,
-        'freq_models':freq_models,
+        'sampled_regret':sampled_regret,
         #
         'num_queries': num_queries,
         #
@@ -229,9 +191,8 @@ def evaluate_main(data, client=None):
         'idx_queries':idx_queries,
         #
         'regret_time':regret_time,
+        'sampled_regret_time':sampled_regret_time,
         'num_queries_t':num_queries_t,
-        #
-        'log_acc_frequent':log_acc_frequent
     }
 
     return eval_results
