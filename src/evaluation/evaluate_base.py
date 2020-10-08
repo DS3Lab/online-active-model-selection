@@ -12,19 +12,14 @@ class Evals:
         self._prob_succ = eval_results['prob_succ']
         self._acc = eval_results['acc']
         self._regret = eval_results['regret']
-        self._post_ratio = eval_results['post_ratio']
-        self._gap_star_freqs = eval_results['gap_star_freqs']
-        self._gap_freqs = eval_results['gap_freqs']
-        self._freq_models = eval_results['freq_models']
+        self._sampled_regret = eval_results['sampled_regret']
         self._num_queries = eval_results['num_queries']
         self._log_acc = eval_results['log_acc']
         self._true_acc = eval_results['true_acc']
         self._num_queries_t = eval_results['num_queries_t']
-        #
-        self._prob_succ_frequent = eval_results['prob_succ_frequent']
-        self._acc_frequent = eval_results['acc_frequent']
-        #
-        self._log_acc_frequent = eval_results['log_acc_frequent']
+        self._regret_time = eval_results['regret_time']
+        self._sampled_regret_time = eval_results['sampled_regret_time']
+
 
 
 
