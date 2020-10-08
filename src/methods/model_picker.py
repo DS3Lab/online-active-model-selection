@@ -67,6 +67,9 @@ def model_picker(data, idx_budget, streaming_data_indices, tuning_par, mode):
             z_t_log[t-1] = z_t
         else:
             # Else, make a random query decision
+            u_t = np.maximum(u_t, eta)
+            if u_t>1:
+                u_t=1
             z_t = np.random.binomial(size=1, n=1, p=u_t)
             z_t_log[t-1] = z_t
 
