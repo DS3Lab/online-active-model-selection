@@ -38,14 +38,13 @@ def publish_evals(resultsdir):
     """Extract evaluations"""
     prob_succ = eval_results['prob_succ']
     acc = eval_results['acc']
-    prob_succ_frequent = eval_results['prob_succ_frequent']
-    acc_frequent = eval_results['acc_frequent']
     regret = eval_results['regret']
     regret_time = eval_results['regret_time']
+    sampled_regret = eval_results['sampled_regret']
+    sampled_regret_time = eval_results['sampled_regret_time']
     #
     num_queries = eval_results['num_queries']
     log_acc = eval_results['log_acc']
-    log_acc_frequent = eval_results['log_acc_frequent']
     true_acc = eval_results['true_acc']
     #
     num_queries_t = eval_results['num_queries_t']
@@ -61,23 +60,17 @@ def publish_evals(resultsdir):
     log_gap_frequent = np.zeros(log_gap.shape)
     for i in range(np.size(log_acc, 2)):
         log_gap[:, :, i] = true_acc - np.squeeze(log_acc[:, :, i])
-        log_gap_frequent[:, :, i] = true_acc - np. squeeze(log_acc_frequent[:, :, i])
     # Compute the expected accuracy gap
     mean_acc_gap = 100 * np.mean(log_gap, axis=1) # percentage
     worst_acc_gap = 100 * np.max(log_gap, axis=1) # percentage
-
-    mean_acc_gap_frequent = 100 * np.mean(log_gap_frequent, axis=1) # percentage
-    worst_acc_gap_frequent = 100 * np.max(log_gap_frequent, axis=1) # percentage
-
 
 
     """Print the evaluation results."""
     for i in np.arange(np.size(log_acc, 2)):
         print('\nMethod: ' + str(methods_fullname[i]) + '  \n|| Number of Queries: ' + str(
-            num_queries[i, :]) + '   \n|| Budget: ' + str(budget) + ' \n|| Confidence: ' + str(prob_succ[:, i]) +' \n|| Confidence (frequent): ' + str(prob_succ_frequent[:, i]) +
+            num_queries[i, :]) + '   \n|| Budget: ' + str(budget) + ' \n|| Confidence: ' + str(prob_succ[:, i]) +
               ' \n|| Expected accuracy gap: ' + str(mean_acc_gap[:, i]) + '\n|| Worst case accuracy gap: ' + str(
-            worst_acc_gap[:, i])+' \n|| Expected accuracy gap (frequent): ' + str(mean_acc_gap_frequent[:, i]) + '\n|| Worst case accuracy gap (frequent): ' + str(
-            worst_acc_gap_frequent[:, i]) + ' \n|| Final regret: ' + str(regret[:, i]))
+            worst_acc_gap[:, i]) + ' \n|| Final regret: ' + str(regret[:, i])+ ' \n|| Final sampled regret: ' + str(sampled_regret[:, i]))
 
         # Note: If you would like to monitor regret (over stream), please uncomment below. We omit this to avoid printing a huge matrix
         # print('\nMethod: '+str(methods_fullname[i]) + ' \n|| Regret over time: ' +str(regret_time[idx_regret, :, i]))
