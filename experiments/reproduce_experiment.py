@@ -4,6 +4,7 @@ from dask.distributed import LocalCluster
 def main(dataset_name, cluster=None):
 
     experiment = dataset_name
+    load_hyperparameters = 'true'
 
     if experiment == 'EmoContext':
         # Emotion Detection
@@ -19,16 +20,12 @@ def main(dataset_name, cluster=None):
         #
         constants = [150, 0.1, 6]
         #
-        budgets = list(np.arange(10, 180, 20)) #list(np.arange(10, 211, 20))
-
+        budgets = list(np.arange(10, 200, 20))
         #
-        grid_size = 500
-        num_reals_tuning = 30
-        NumReals = 100#0#00#0
-        load_hyperparameters = 'true'
-        # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 1, 1, 1, 1, 0])   # In order, mp, qbc, sqbc, rs, iwal, efal
-        # which_methods = list([0, 0, 0, 0, 0, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        grid_size = 250
+        num_reals_tuning = 100
+        NumReals = 500
+        which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
 
     elif experiment == 'DomainDrift':
         # Emotion Detection
@@ -44,16 +41,13 @@ def main(dataset_name, cluster=None):
         #
         constants = [150, 0.1, 6]
         #
-        budgets = [50,250,500,750,1000,1250,1500,1750,2000,2250,2500]
+        budgets = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000]
 
         #
-        grid_size = 120
-        num_reals_tuning = 50
-        NumReals = 500  # 00#0
-        load_hyperparameters = 'true'
-        # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 1, 1, 1, 1, 0])   # In order, mp, qbc, sqbc, rs, iwal, efal
-        # which_methods = list([0, 0, 0, 0, 0, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        grid_size = 250
+        num_reals_tuning = 100
+        NumReals = 500
+        which_methods = list([1, 1, 1, 1, 1, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
     elif experiment == 'CIFAR10':
         # CIFAR10 55-92
@@ -71,25 +65,20 @@ def main(dataset_name, cluster=None):
         constant_sqbc = 1.4
         constants = [150, 0.1, 5]
         #
-        budgets = [50,450,1000, 2000,4000]
-        # budgets = [50,250,500,750,1000,1250,1500,2000,2500,3000,3500,4000]
+        budgets = [50,250,500,750,1000,1250,1500,2000,2500,3000,3500,4000]
         #
-        grid_size = 500
-        num_reals_tuning = 30
-        NumReals = 10#0#0#00
-        load_hyperparameters = 'true' # don't tune but load the hyperparameters
-        # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        # which_methods = list([1, 1, 1, 1, 1, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 1, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
-
+        grid_size = 250
+        num_reals_tuning = 100
+        NumReals = 500
+        which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
 
         #
-    elif experiment == 'CIFAR10 (worse models)':
+    elif experiment == 'CIFAR10 V2':
         # CIFAR10 40-70
         DatasetName = 'cifar10_4070'
         #
         StreamSize = 5000
-        hyper_mp = 500000
+        hyper_mp = 50000
         hyper_qbc = 3
         hyper_sqbc = 10
         hyper_iwal = 1
@@ -97,14 +86,11 @@ def main(dataset_name, cluster=None):
 
         constants = [10, 0.1, 6]  # sqbc: increase
         #
-        # budgets = [50,350,700,1300,1900,2400,3000,3500,4000]
         budgets = [50, 250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 3500, 4000]
-        grid_size = 500
-        num_reals_tuning = 50
-        NumReals = 100#00
-        load_hyperparameters = 'true'
-        # which_methods = list([1, 1, 1, 1, 1, 1])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 1, 1, 1, 1, 0])   # In order, mp, qbc, sqbc, rs, iwal, efal
+        grid_size = 250
+        num_reals_tuning = 100
+        NumReals = 500
+        which_methods = list([1, 1, 1, 1, 1, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
         #
     elif experiment == 'ImageNet':
         DatasetName = 'imagenet'
@@ -123,12 +109,10 @@ def main(dataset_name, cluster=None):
         #
         budgets = [50, 300, 600, 900, 1200, 1500, 1750, 2000, 2250, 2500, 3000, 4000, 5000, 7000, 10000]
         #
-        grid_size = 200
-        num_reals_tuning = 30
-        NumReals = 500#50
-        load_hyperparameters = 'false'
-        # which_methods = list([1, 1, 1, 1, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
-        which_methods = list([1, 0, 0, 0, 0, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
+        grid_size = 250
+        num_reals_tuning = 100
+        NumReals = 500
+        which_methods = list([1, 1, 1, 1, 1, 0])  # In order, mp, qbc, sqbc, rs, iwal, efal
 
     else:
         raise ValueError('The model collection does not exist')
@@ -150,9 +134,8 @@ def main(dataset_name, cluster=None):
                 hyperparameter_bounds_experiment.append(hyperparameter_bounds[i-1])
 
     """Run experiment."""
-    cluster = 'localhost'
-    # cluster = None  # localhost'
-    # cluster = "fdr4:8786"
+    cluster = None
+    # cluster = 'localhost'
     aws_workers = 32
     run_experiment(DatasetName, StreamSize, StreamSetting, budgets, NumReals, WinnerEvalWindow, num_reals_tuning, grid_size, load_hyperparameters, hyperparameter_bounds_experiment, which_methods, constants, cluster, aws_workers)
 
