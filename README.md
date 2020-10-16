@@ -162,7 +162,7 @@ The main experiment pipeline consists of the following modules:
 
 [5] Alina Beygelzimer, Daniel J Hsu, John Langford, and Tong Zhang. Agnostic active learning without constraints. _In Advances in Neural Information Processing Systems 23_, pages 199-207, 2010.
 
-[6] Alexander Vergara, Shankar Vembu, Tuba Ayhan, Margaret A. Ryan, Margie L. Homer and Ramon Huerta, Chemical gas sensor drift compensation using classifier ensembles, Sensors and Actuators B: Chemical (2012) doi: 10.1016/j.snb.2012.01.074. 
+[6] Alexander Vergara, Shankar Vembu, Tuba Ayhan, Margaret A. Ryan, Margie L. Homer and Ramon Huerta, Chemical gas sensor drift compensation using classifier ensembles, _Sensors and Actuators B: Chemical_ doi: 10.1016/j.snb.2012.01.074, 2012. 
 
 [7] SemEval 2019 https://www.humanizing-ai.com/emocontext.html
 
