@@ -1,6 +1,6 @@
-# Online Active Model Selection for Pre-trained ML Models
+# Online Active Model Selection for Pre-trained ML Classifiers
 
-This repository is the official implementation of our work on online active model selection for pre-trained ML models.
+This repository is the official implementation of our work on online active model selection for pre-trained ML classifiers.
 
 
 ## Requirements
