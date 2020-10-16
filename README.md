@@ -31,7 +31,7 @@ docker run --it online-active-model-selection
 To run experiment on a set of collected pre-trained models, run this command:
 
 ```buildoutcfg
-python3 -m experiments.run_experiment [--dataset {'EmoContext', 'CIFAR10', 'ImageNet', 'CIFAR10 (worse models)'}]
+python3 -m experiments.run_experiment [--dataset {'CIFAR10', 'ImageNet', 'Drift', 'EmoContext', 'CIFAR10 V2'}]
                                       [--stream_size STREAM_SIZE] 
                                       [--stream_setting {'float', 'fixed'}] 
                                       [--budgets BUDGETS]
@@ -45,7 +45,7 @@ python3 -m experiments.run_experiment [--dataset {'EmoContext', 'CIFAR10', 'Imag
                                       [--constants CONSTANTS]
 
 arguments:
---dataset {'EmoContext', 'CIFAR10', 'ImageNet', 'CIFAR10 (worse models)'}
+--dataset {'CIFAR10', 'ImageNet', 'Drift', 'EmoContext', 'CIFAR10 V2'}
                                       Dataset over which collected pre-trained models will be ranked.
 --stream_size STREAM_SIZE             Size of streaming instances in a single realization (denoted by n in the paper).
 --stream_setting {'float', 'fixed'}   If 'floating', streaming instances will be drawn randomly from entire test set at each 
@@ -87,10 +87,10 @@ optional arguments:
 To reproduce the results in the paper run this command:
 
 ```buildoutcfg
-python3 -m experiments.reproduce_experiment [--dataset {'EmoContext', 'CIFAR10', 'ImageNet', 'CIFAR10 (worse models)'}]
+python3 -m experiments.reproduce_experiment [--dataset {'CIFAR10', 'ImageNet', 'Drift', 'EmoContext', 'CIFAR10 V2'}]
 
 arguments:
---dataset {'EmoContext', 'CIFAR10', 'ImageNet', 'CIFAR10 (worse models)'}
+--dataset {'CIFAR10', 'ImageNet', 'Drift', 'EmoContext', 'CIFAR10 V2'}
                                       Dataset over which pre-trained models are collected.
 
 optional arguments: 
@@ -104,8 +104,8 @@ optional arguments:
 ```
 
 > Upon completion of experiments, it will save the all the results at `resources/results/`. By default, number of 
->realizations is set to 1 000 (EmoContext), 1 000 (CIFAR10), 500 (ImageNet) and 1 000 (CIFAR10 (worse models)). 
->Each realization on a single core can take from 4 seconds (EmoContext) to 8 minutes (ImageNet) for all model selection methods 
+>realizations is set to 500 for all datasets. 
+>Each realization on a single core can take from 1 seconds (EmoContext) to 4 minutes (ImageNet) for all model selection methods 
 >in total. 
 >
 >If you would like to get a glimpse of results by reproducing in a limited time, you can run `python3 -m experiments.reproduce_experiment 'EmoContext'`, which will take slightly less than an hour. For other datasets, we recommend setting number of realization (set `num_reals` in `reproduce_experiment`) to a lower number and `cluster` to `localhost` to benefit from parallelization. 
@@ -115,7 +115,7 @@ optional arguments:
 Below, we summarize our results on the confidence of model selection methods in returning the true best model on each dataset where pre-trained models are collected. These results can be reproduced by following above instructions. The results may fluctuate up to +/-0.01 of the presented values.
 For results on the other performance measures such as _accuracy gap_ and _regret_, we refer to our submitted manuscipt.
 
-![Confidence Tables](confidence_tables.png?raw=true "Confidence Table")
+![Identification Probabilities](identification_probabilities.png?raw=true "Identification Probabilities")
 
 ### Remarks 
 * We demonstrate the power of the Model Picker algorithm up to a budget at which Model Picker returns the true best model with high confidence. Budget can be set to any number upto the size of streaming instances n.
@@ -128,10 +128,11 @@ Each set of model collections consist of predictions by some machine learning mo
 
 The pretrained models are located at `/resources/datasets/`, which include `{'emotion_detection', 'cifar10_5592', 'imagenet', 'cifar10_4070'}` that stand for `{'EmoContext', 'CIFAR10', 'ImageNet', 'CIFAR10 (worse models)'}`, respectively. Each folder consists of three files: `predictions.npy`, `oracle.npy` and `overview`. `predictions.npy` contains prediction matrix of size `size_of_test_set x number of models`, and `oracle.npy` contains the ground truth labels, an array of `size_of_test_set`. Finally, `overview` indicates details on the pre-trained models. We further summarize the set of model collections as follows.
 
-* `EmoContext`: The models are collected on the emotion detection dataset [6]. The collection consists of 8 models and their class predictions (over 4 classes) on 5 509 test instances as well as their respective ground truth labels. The model accuracies on the entire pool (of 5 509 instances) varies from 0.88 to 0.92.
-* `CIFAR10`: The models are collected on the CIFAR10 dataset following [7]. The collection consists of class predictions of 10 000 test instances by 80 models, and the ground truth labels for 10 000 test instances. The number of classes is 10, and the model accuracies on the entire test set (of 10 000 instances) varies from 0.55 to 0.92.
-* `ImageNet`: The available models at [8] are collected on the ImageNet dataset. The collection consists of class predictions of 50 000 test instances by 102 models, and the ground truth labels for 50 000 instances. The number of classes is 1 000, and the model accuracies on the entire test set (consisting of 50 000 instances) varies from 0.5 to 0.82.
-* `CIFAR10 (worse models)`: The models are collected on the CIFAR10 dataset following [7]. The collection consists of class predictions of 10 000 test instances by 80 models, and the ground truth labels for 10 000 instances. The number of classes is 10, and the model accuracies on the entire test set (of 10 000 instances) varies from 0.40 to 0.70.
+* `CIFAR10`: The models are collected on the CIFAR10 dataset following [8]. The collection consists of class predictions of 10 000 test instances by 80 models, and the ground truth labels for 10 000 test instances. The number of classes is 10, and the model accuracies on the entire test set (of 10 000 instances) varies from 0.55 to 0.92.
+* `ImageNet`: The available models at [9] are collected on the ImageNet dataset. The collection consists of class predictions of 50 000 test instances by 102 models, and the ground truth labels for 50 000 instances. The number of classes is 1 000, and the model accuracies on the entire test set (consisting of 50 000 instances) varies from 0.5 to 0.82.
+* `Drift`: The models are collected on the gas sensor dataset [6]. The collection consists of 9 models and their class predictions (over 6 classes) on 3 000 test instances as well as their respective ground truth labels. The model accuracies on the entire pool (of 3 000 instances) varies from 0.25 to 0.6.
+* `EmoContext`: The models are collected on the emotion detection dataset [7]. The collection consists of 8 models and their class predictions (over 4 classes) on 5 509 test instances as well as their respective ground truth labels. The model accuracies on the entire pool (of 5 509 instances) varies from 0.88 to 0.92.
+* `CIFAR10 V2`: The models are collected on the CIFAR10 dataset following [8]. The collection consists of class predictions of 10 000 test instances by 80 models, and the ground truth labels for 10 000 instances. The number of classes is 10, and the model accuracies on the entire test set (of 10 000 instances) varies from 0.40 to 0.70.
     
 ### Pipeline structure
 * The code for the main experiment `run_experiment.py` is located at `experiments/`
@@ -161,9 +162,12 @@ The main experiment pipeline consists of the following modules:
 
 [5] Alina Beygelzimer, Daniel J Hsu, John Langford, and Tong Zhang. Agnostic active learning without constraints. _In Advances in Neural Information Processing Systems 23_, pages 199-207, 2010.
 
+[6] Alexander Vergara, Shankar Vembu, Tuba Ayhan, Margaret A. Ryan, Margie L. Homer and Ramon Huerta, Chemical gas sensor drift compensation using classifier ensembles, Sensors and Actuators B: Chemical (2012) doi: 10.1016/j.snb.2012.01.074. 
 
-[6] SemEval 2019 https://www.humanizing-ai.com/emocontext.html
+[7] SemEval 2019 https://www.humanizing-ai.com/emocontext.html
 
-[7] Pytorch Classification https://github.com/bearpaw/pytorch-classification
+[8] Pytorch Classification https://github.com/bearpaw/pytorch-classification
 
-[8] Tensorflow Hub https://tfhub.dev/
+[9] Tensorflow Hub https://tfhub.dev/
+
+
