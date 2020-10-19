@@ -40,8 +40,6 @@ def publish_evals(resultsdir):
     acc = eval_results['acc']
     regret = eval_results['regret']
     regret_time = eval_results['regret_time']
-    sampled_regret = eval_results['sampled_regret']
-    sampled_regret_time = eval_results['sampled_regret_time']
     #
     num_queries = eval_results['num_queries']
     log_acc = eval_results['log_acc']
@@ -62,15 +60,15 @@ def publish_evals(resultsdir):
         log_gap[:, :, i] = true_acc - np.squeeze(log_acc[:, :, i])
     # Compute the expected accuracy gap
     mean_acc_gap = 100 * np.mean(log_gap, axis=1) # percentage
-    worst_acc_gap = 100 * np.max(log_gap, axis=1) # percentage
+    worst_acc_gap = 100 * np.percentile(log_gap, 90, axis=1) # percentage
 
 
     """Print the evaluation results."""
     for i in np.arange(np.size(log_acc, 2)):
         print('\nMethod: ' + str(methods_fullname[i]) + '  \n|| Number of Queries: ' + str(
-            num_queries[i, :]) + '   \n|| Budget: ' + str(budget) + ' \n|| Confidence: ' + str(prob_succ[:, i]) +
-              ' \n|| Expected accuracy gap: ' + str(mean_acc_gap[:, i]) + '\n|| Worst case accuracy gap: ' + str(
-            worst_acc_gap[:, i]) + ' \n|| Final regret: ' + str(regret[:, i])+ ' \n|| Final sampled regret: ' + str(sampled_regret[:, i]))
+            num_queries[i, :]) + '   \n|| Budget: ' + str(budget) + ' \n|| Identification Probability: ' + str(prob_succ[:, i]) +
+              ' \n|| Accuracy gap: ' + str(mean_acc_gap[:, i]) + '\n|| Worst case accuracy gap: ' + str(
+            worst_acc_gap[:, i]))
 
         # Note: If you would like to monitor regret (over stream), please uncomment below. We omit this to avoid printing a huge matrix
         # print('\nMethod: '+str(methods_fullname[i]) + ' \n|| Regret over time: ' +str(regret_time[idx_regret, :, i]))
