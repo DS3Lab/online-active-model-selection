@@ -112,7 +112,7 @@ optional arguments:
 
 ## Results
 
-Below, we summarize our results on the identification probabilities of model selection methods in returning the true best model on each dataset where pre-trained models are collected. These results can be reproduced by following above instructions. The results may fluctuate up to +/-0.01 of the presented values.
+Below, we summarize our results on the identification probabilities of model selection methods in returning the true best model on each dataset where pre-trained models are collected. These results can be reproduced by following above instructions. The results may fluctuate up to a very small value of the presented values at different runs.
 For results on the other performance measures such as _accuracy gap_ and _regret_, we refer to our submitted manuscipt.
 
 ![Identification Probabilities](identification_probabilities.png?raw=true "Identification Probabilities")
