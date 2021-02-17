@@ -121,7 +121,6 @@ For results on the other performance measures such as _accuracy gap_ and _regret
 * We demonstrate the power of the Model Picker algorithm up to a budget at which Model Picker returns the true best model with high probability. Budget can be set to any number upto the size of streaming instances n.
 * If the size of stream is to be changed, hyperparameters need to be retuned accordingly: `load_hyperpameters = 'false'`. 
 * Certain methods such as Structural Query by Committee and Efficient Active Learning cannot query arbitrary number of instances. More precisely, their querying capability is upper bounded by some number due to the nature of the algorithms. In such cases, they may not exceed the budget (one can observe this while reproducing the results). Similarly, Model Picker refuses to query labels if it reaches to a certain identification probability. For example, it does not query more than 2 500 instances on ImageNet dataset.
-* For scalability reasons and motivated by the comparisons on the other datasets, we only consider Model Picker, Query by Committee, Structural Query by Committee and Random Sampling to rank models that are pre-trained on ImageNet. 
 ## Experimental pipeline
 ### Pre-trained Models
 Each set of model collections consist of predictions by some machine learning models on a set of test instances, as well as their respective ground truth labels. Below is further details on the model collections:
