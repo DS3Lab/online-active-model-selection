@@ -2,7 +2,6 @@
 
 This repository is the official implementation of our work on online active model selection for pre-trained ML classifiers.
 
-
 ## Requirements
 
 We can set up the repo either through pip, pipenv or Docker.
