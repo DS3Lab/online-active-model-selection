@@ -109,13 +109,6 @@ optional arguments:
 >
 >If you would like to get a glimpse of results by reproducing in a limited time, you can run `python3 -m experiments.reproduce_experiment 'EmoContext'`, which will take slightly less than an hour. For other datasets, we recommend setting number of realization (set `num_reals` in `reproduce_experiment`) to a lower number and `cluster` to `localhost` to benefit from parallelization. 
 
-## Results
-
-Below, we summarize our results on the identification probabilities of model selection methods in returning the true best model on each dataset where pre-trained models are collected. These results can be reproduced by following above instructions. The results may fluctuate up to a very small value of the presented values at different runs.
-For results on the other performance measures such as _accuracy gap_ and _regret_, we refer to our submitted manuscipt.
-
-![Identification Probabilities](identification_probabilities.png?raw=true "Identification Probabilities")
-
 ### Remarks 
 * We demonstrate the power of the Model Picker algorithm up to a budget at which Model Picker returns the true best model with high probability. Budget can be set to any number upto the size of streaming instances n.
 * If the size of stream is to be changed, hyperparameters need to be retuned accordingly: `load_hyperpameters = 'false'`. 
