@@ -4,7 +4,7 @@ bokeh==2.0.2
 cffi==1.14.0
 click==7.1.2
 cloudpickle==1.4.1
-cryptography==2.9.2
+cryptography==39.0.1
 cycler==0.10.0
 dask[complete]==2.17.0
 distributed==2.17.0
